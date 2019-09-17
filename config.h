@@ -5,7 +5,9 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+// static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "Roboto Mono:pixelsize=18:antialias=true:autohint=true";
+
 static int borderpx = 2;
 
 /*
@@ -80,10 +82,10 @@ char *termname = "st-256color";
  *
  *	stty tabs
  */
-unsigned int tabspaces = 8;
+unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.8;
+float alpha = 0.92;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -146,6 +148,10 @@ static unsigned int mousebg = 0;
  */
 static unsigned int defaultattr = 11;
 
+/* Internal keyboard shortcuts. */
+#define MODKEY Mod4Mask 
+#define TERMMOD (ControlMask|ShiftMask)
+
 /*
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
@@ -160,26 +166,29 @@ MouseKey mkeys[] = {
 	/* button               mask            function        argument */
 	{ Button4,              ShiftMask,      kscrollup,      {.i =  1} },
 	{ Button5,              ShiftMask,      kscrolldown,    {.i =  1} },
+	{ Button4,              MODKEY,         kscrollup,      {.i =  1} },
+	{ Button5,              MODKEY,         kscrolldown,    {.i =  1} },
+	{ Button4,              TERMMOD,        zoom,           {.f =  +1} },
+	{ Button5,              TERMMOD,        zoom,           {.f =  -1} },
 };
 
-/* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask
-#define TERMMOD (ControlMask|ShiftMask)
 
 static Shortcut shortcuts[] = {
-	/* mask                 keysym          function        argument */
-	{ XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
-	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
-	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
-	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
-	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+   /* mask                 keysym          function        argument */
+   { XK_ANY_MOD,           XK_Break,       sendbreak,      {.i =  0} },
+   { ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
+   { ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
+   { XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
+   { TERMMOD,              XK_plus,        zoom,           {.f = +1} },
+   { TERMMOD,              XK_underscore,  zoom,           {.f = -1} },
+   { TERMMOD,              XK_c,           clipcopy,       {.i =  0} },
+   { TERMMOD,              XK_v,           clippaste,      {.i =  0} },
+   { MODKEY,               XK_y,           clipcopy,       {.i =  0} },
+   { MODKEY,               XK_p,           clippaste,      {.i =  0} },
+   { TERMMOD,              XK_p,           selpaste,       {.i =  0} },
+   { MODKEY,               XK_j,           kscrolldown,    {.i =  -1} },
+   { MODKEY,               XK_k,           kscrollup,      {.i =  -1} },
+   { TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 };
 
 /*
